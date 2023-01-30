@@ -1,14 +1,9 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { UnauthorizedError, ForbiddenError } from '../apiErrors/apiErrors';
-import { secret } from '../controller/auth';
-import { UserType } from '../models/Users';
 import { TokenData } from '..';
 
-type Asss = {
-  phone: string;
-  id: string;
-};
+import { secretAuth } from '../utils/secrets';
 
 const authMiddleware = async (
   req: Request,
@@ -21,8 +16,9 @@ const authMiddleware = async (
     if (!token) throw new UnauthorizedError();
 
     if (token) {
-      jwt.verify(token, secret) as TokenData;
-      req.tokenData;
+      const varifiedAdminUser = jwt.verify(token, secretAuth) as TokenData;
+     
+      req.tokenData = varifiedAdminUser;
       next();
     } else {
       throw new ForbiddenError();

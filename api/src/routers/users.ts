@@ -1,5 +1,6 @@
 import express from 'express';
-
+import authMiddleware from '../middleware/authMiddleware';
+import adminMiddleware from '../middleware/adminMiddleware';
 import {
     allUsers,
     findUserById,
@@ -10,11 +11,13 @@ import {
 
 const router = express.Router();
 
-router.get('/', allUsers);
-router.get('/:userId', findUserById);
-router.delete('/:userId', deleteUser);
-router.post('/', createUser);
-router.post('/:userId', updateUser);
+router.post('/', createUser); // not in use
+router.get('/:userId', findUserById); // not in use
+
+// admin
+router.get('/', authMiddleware, adminMiddleware, allUsers);
+router.delete('/:userId', authMiddleware, adminMiddleware, deleteUser);
+router.post('/:userId',authMiddleware, adminMiddleware, updateUser);
 
 
 

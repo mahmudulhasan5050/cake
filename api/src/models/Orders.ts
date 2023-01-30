@@ -11,8 +11,9 @@ export type OrderType = Document & {
 };
 
 const orderSchema = new mongoose.Schema({
-  userId: { type: mongoose.Types.ObjectId, ref: 'Users' },
   cakeId: { type: mongoose.Types.ObjectId, ref: 'Cakes' },
+  userId: { type: mongoose.Types.ObjectId, ref: 'Users' },
+
   amount: {
     type: Number,
     default: 1,

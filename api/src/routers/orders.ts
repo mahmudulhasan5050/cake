@@ -1,5 +1,6 @@
 import express from 'express';
-
+import authMiddleware from '../middleware/authMiddleware';
+import adminMiddleware from '../middleware/adminMiddleware';
 import {
   allOrders,
   createOrder,
@@ -12,13 +13,16 @@ import {
 
 const router = express.Router();
 
-router.get('/', allOrders);
-router.get('/userorders/:userId', findOrdersByUserId)
-router.get('/:orderId', findOrderById);
-router.delete('/:orderId', deleteOrder);
-router.post('/', createOrder);
-router.post('/:orderId', updateOrder);
-router.post('/deliverystatus/:orderId', updateDeliveryStatus);
+
+router.get('/userorders/:userId',authMiddleware, findOrdersByUserId)
+router.post('/',authMiddleware, createOrder);
+router.get('/:orderId',authMiddleware, findOrderById);  // not in use
+
+//admin
+router.get('/',authMiddleware,adminMiddleware, allOrders);
+router.delete('/:orderId',authMiddleware,adminMiddleware, deleteOrder);
+router.post('/:orderId',authMiddleware,adminMiddleware, updateOrder);  //not in use
+router.post('/deliverystatus/:orderId',authMiddleware,adminMiddleware, updateDeliveryStatus);
 
 
 

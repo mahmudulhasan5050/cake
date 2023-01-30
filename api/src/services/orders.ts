@@ -50,7 +50,10 @@ const updateDeliveryStatus = async (orderId: string) => {
 };
 
 const findOrderByUserId = async (userId: string) => {
-  const foundOrderByUserId = await Orders.find({ userId});
+  const foundOrderByUserId = await Orders.find({ userId })
+    .populate('userId')
+    .populate('cakeId');
+
   if (!foundOrderByUserId) throw new NotFoundError('Order is not found!!');
   return foundOrderByUserId;
 };
@@ -62,5 +65,5 @@ export default {
   findOrderById,
   updateOrder,
   updateDeliveryStatus,
-  findOrderByUserId
+  findOrderByUserId,
 };

@@ -1,13 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 
-import { UserType } from '../models/Users';
 import authService from '../services/auth';
 import Users from '../models/Users';
 import { AlreadyExistError, BadRequestError, DoesNotExist } from '../apiErrors/apiErrors';
-
-export const secret = 'oeriuhwlieruhwleiruhlieugh%&"####';
 
 //signUp
 export const signUp = async (

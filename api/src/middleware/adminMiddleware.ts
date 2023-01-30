@@ -5,17 +5,14 @@ import Users from '../models/Users';
 
 const adminCheck = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.tokenData as TokenData;
+  const checkUserAdmin = await Users.findById(user.id);
 
-  if (user.id) {
-    const checkUserAdmin = await Users.findById(user.id);
+
     if (checkUserAdmin?.isAdmin) {
       next();
     } else {
       throw new ForbiddenError();
     }
-  } else {
-    throw new ForbiddenError();
-  }
 };
 
 export default adminCheck;

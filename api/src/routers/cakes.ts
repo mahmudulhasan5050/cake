@@ -1,5 +1,6 @@
 import express from 'express';
 import authMiddleware from '../middleware/authMiddleware';
+import adminMiddleware from '../middleware/adminMiddleware';
 import {
   allCakes,
   createCake,
@@ -10,12 +11,15 @@ import {
 
 const router = express.Router();
 
+// without login
 router.get('/', allCakes);
-router.get('/:cakeId', findCakeById);
-router.delete('/:cakeId', deleteCake);
-router.post('/',authMiddleware, createCake);
-router.post('/:cakeId', updateCake);
 
+// login required
+router.get('/:cakeId', authMiddleware, findCakeById);
 
+// for Admin
+router.delete('/:cakeId', authMiddleware, adminMiddleware, deleteCake);
+router.post('/', authMiddleware, adminMiddleware, createCake);
+router.post('/:cakeId', authMiddleware, adminMiddleware, updateCake);
 
 export default router;

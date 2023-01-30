@@ -1,8 +1,8 @@
-import { NotFoundError } from '../apiErrors/apiErrors';
 import jwt from 'jsonwebtoken';
 import Users, { UserType } from '../models/Users';
 
-const secret = 'oeriuhwlieruhwleiruhlieugh%&"####';
+import { secretAuth } from '../utils/secrets';
+
 
 const signUp = async (newUser: UserType) => {
   const result = await Users.create({
@@ -10,7 +10,7 @@ const signUp = async (newUser: UserType) => {
     phone: newUser.phone,
     password: newUser.password,
   });
-  const token = jwt.sign({ phone: result.phone, id: result._id }, secret);
+  const token = jwt.sign({ phone: result.phone, id: result._id }, secretAuth);
 
   const signInName = result.userName;
   const admin = result.isAdmin;
@@ -21,8 +21,8 @@ const signUp = async (newUser: UserType) => {
 
 const signIn = async (existingUser: UserType) => {
 
-  const token = jwt.sign({ phone: existingUser.phone, id: existingUser._id }, secret, {
-    expiresIn: '24h',
+  const token = jwt.sign({ phone: existingUser.phone, id: existingUser._id }, secretAuth, {
+    expiresIn: 86400,
   });
 
   const signInName = existingUser.userName;

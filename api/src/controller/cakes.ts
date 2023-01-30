@@ -30,7 +30,6 @@ export const findCakeById = async (
   try {
     const cakeId = req.params.cakeId;
     const foundCakeById = await cakeService.findCakeById(cakeId);
-    console.log('foundCakeById   ', foundCakeById);
     res.status(200).json(foundCakeById);
   } catch (err) {
     next(new BadRequestError('Invalid Request', err));
@@ -56,8 +55,7 @@ export const createCake = async (
       selectedFile,
     });
 
-     const newCake = await cakeService.createCake(cake);
-     console.log("add ", newCake)
+    const newCake = await cakeService.createCake(cake);
     res.status(200).json(newCake);
   } catch (err) {
     next(new BadRequestError('Can not create Product name', err));
@@ -70,13 +68,12 @@ export const deleteCake = async (
   res: Response,
   next: NextFunction
 ) => {
-  try { 
+  try {
     const cakeId = req.params.cakeId;
     const existingCake = await Cakes.findOne({ cakeId });
     if (!existingCake) throw new NotFoundError();
 
     await cakeService.deleteCake(cakeId);
-    console.log("cake delete complete")
     res.status(204).end();
   } catch (err) {
     next(new BadRequestError('Can not delete.....', err));

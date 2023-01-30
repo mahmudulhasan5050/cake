@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import orderService from '../services/orders';
 import Orders from '../models/Orders';
-import { AlreadyExistError, BadRequestError } from '../apiErrors/apiErrors';
+import { BadRequestError } from '../apiErrors/apiErrors';
 
 //Find all orders info
 export const allOrders = async (
@@ -26,7 +26,6 @@ export const findOrderById = async (
   try {
     const orderId = req.params.orderId;
     const foundOrderById = await orderService.findOrderById(orderId);
-    console.log('foundOrderById   ', foundOrderById);
     res.status(200).json(foundOrderById);
   } catch (err) {
     next(new BadRequestError('Invalid Request', err));
@@ -40,30 +39,19 @@ export const createOrder = async (
   next: NextFunction
 ) => {
   try {
-    const {
+    const { userId, cakeId, amount, totalPrice, deliveryDate } = req.body;
+
+    const order = new Orders({
       userId,
       cakeId,
       amount,
       totalPrice,
-      deliveryDate
-    } = req.body;
-
-    // const existingOrder = await Orders.findOne({ cakeId });
-    // if (existingOrder) throw new AlreadyExistError();
-
-    const order = new Orders({
-      userId,
-        cakeId,
-        amount,
-        totalPrice,
-        deliveryDate
-
+      deliveryDate,
     });
 
     await orderService.createOrder(order);
     res.status(200).json(order);
   } catch (err) {
-    console.log("error  ", err)
     next(new BadRequestError('Can not create order', err));
   }
 };
@@ -129,7 +117,6 @@ export const findOrdersByUserId = async (
   try {
     const userId = req.params.userId;
     const foundOrderByUserId = await orderService.findOrderByUserId(userId);
-    //console.log('foundOrderById   ', foundOrderByUserId);
     res.status(200).json(foundOrderByUserId);
   } catch (err) {
     next(new BadRequestError('Invalid Request', err));

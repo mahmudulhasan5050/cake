@@ -6,35 +6,33 @@ import express, {
   ErrorRequestHandler,
 } from 'express';
 import mongoose from 'mongoose';
-import { Server } from 'http';
 import createHttpError from 'http-errors';
-import { config } from 'dotenv';
 import cors from 'cors';
 
+import { MongoUri, Port } from './utils/secrets';
 import cakeRouter from './routers/cakes';
 import userRouter from './routers/users';
 import orderRouter from './routers/orders';
-import authRouter from './routers/auth'
+import authRouter from './routers/auth';
 
-config();
-const MongoUri = process.env['MONGODB_URI'] as string;
-mongoose.connect(MongoUri)
-.then(()=>{
-  console.log("mongoDB connected!!")
-}).catch((err)=>{
-  console.log("Mongo Error" + err)
-})
+mongoose
+  .connect(MongoUri)
+  .then(() => {
+    console.log('mongoDB connected!!');
+  })
+  .catch((err) => {
+    console.log('Mongo Error' + err);
+  });
 
 const app: Application = express();
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
-app.use(express.urlencoded({extended: true}))
-
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1/cakes', cakeRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/orders', orderRouter);
-app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/auth', authRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   next(new createHttpError.NotFound());
@@ -52,6 +50,6 @@ app.use(errorHandler);
 
 const PORT: Number = Number(process.env.PORT);
 
-app.listen(PORT, () => {
-  console.log(`server is on port ${PORT}`);
+app.listen(Port, () => {
+  console.log(`server is on port ${Port}`);
 });

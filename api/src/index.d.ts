@@ -7,6 +7,6 @@ interface TokenData {
 
 declare module "express-serve-static-core" {
   interface Request {
-    tokenData: TokenData
+    tokenData?: TokenData
   }
 }
